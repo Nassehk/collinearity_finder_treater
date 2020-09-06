@@ -58,19 +58,20 @@ class cluster():
 
         for pair in self.pairs:
             nx.draw_networkx_nodes(graph, pos, node_size=300, edgecolors = (0.3,0.3,0.3), linewidths = 1, node_color = '#FFF')
+
             alph = (abs(pair[2])-threshold)/(1-threshold)
             if alph < min_alpha:
                 alph = min_alpha
 #            print(pair[2])
+
             w = (abs(pair[2])-threshold)/(1-threshold)*max_line_width
             if w < min_line_width:
                 w = min_line_width
-                
+
+            color = 'b'    
             if pair[2]<0:
                 color = 'r'
-            else:
-                color = 'b'
-                
+
             nx.draw_networkx_edges(graph, pos, edge_color = color, edgelist = [[pair[0],pair[1]]], width = w, alpha = alph )
             nx.draw_networkx_labels(graph, pos, font_size=24, font_weight = 'bold', font_family='sans-serif', font_color=(0,0,0), alpha = 0.9)
             
@@ -102,8 +103,8 @@ def identify_cluster(X_data_df, threshold = 0.7, correlation_id_method = 'pearso
                 added_to_final = True
         if added_to_final == False:
             final_clusters.append(_cluster)
-    for i, clus_ in enumerate(final_clusters):
-        clus_.name = f'cluster_{i}'
+    for i, _cluster in enumerate(final_clusters):
+        _cluster.name = f'cluster_{i}'
     return final_clusters
 
 
