@@ -8,7 +8,6 @@ Created on Thu Jul 16 10:51:57 2020
 import pandas as pd
 from sklearn.decomposition import PCA
 from cluster import cluster
-      
 
 def identify_cluster(X_data_df, threshold = 0.7, correlation_id_method = 'pearson'):
     cor = X_data_df.corr(method = correlation_id_method)
@@ -27,7 +26,7 @@ def identify_cluster(X_data_df, threshold = 0.7, correlation_id_method = 'pearso
                     clusters.append(cluster(pairs = [current_pair]))
     final_clusters = []
     
-    #It is possible to have mergable clusters. Check if the idetified clusters can be merged.
+    #It is possible to have clusters with shared nodes which which is not desirable. Here we merge the cluster that share nodes.
     for _cluster in clusters:
         added_to_final = False
         for final_c in final_clusters:
@@ -51,8 +50,6 @@ def _pca(X_data,n=1):
 class collinear_data():
     def __init__ (self, collinear_df):
         self.collinear_df = collinear_df
-#        self._clusters = self.clusters(threshold = 0.7)
-#        self.cluster_variables = {cl.name:cl.nodes for cl in self._clusters}
         self.pca_obj_dict = None
         
     def clusters(self, threshold = 0.7):
@@ -120,25 +117,26 @@ def sample_data(file):
 if __name__ == '__main__':
     raw_data = sample_data('sample_X_data.csv')
 #    define a threshold for identifying collinear pairs
-    thresh = 0.7
+    collinearity_threshold = 0.7
 
 # =============================================================================
-# You can identify the clusters and see visualize them with graphs without 
-# doing any pricessing. Uncomment he next three lines if you want to do so.    
+# You can identify the clusters and visualize them with graphs without 
+# doing any processing. Uncomment the next three lines if you want to do so.
+# This is a good way to explore the correlations between features.    
 # =============================================================================
-#    clusters = identify_cluster(raw_data, threshold = thresh)
+#    clusters = identify_cluster(raw_data, threshold = collinearity_threshold)
 #    for cl in clusters:
 #        cl.plot()
 
 # =============================================================================
-# This is the normal way of using this library. First create a collinear_data 
-# object by providing the raw data
+# To process the data, first create a collinear_data object by providing the
+# raw data. Then call the non_collinear_df method to identify the cluster and
+# create the teated dataset.
 # =============================================================================
-
-    colin_data = collinear_data(raw_data)
+    collin_data = collinear_data(raw_data)
     point_col = pd.DataFrame(raw_data.iloc[2,:]).T
-    non_colin_data = colin_data.non_collinear_df(threshold = thresh)
-    for cl in colin_data._clusters:
+    non_colin_data = collin_data.non_collinear_df(threshold = collinearity_threshold)
+    for cl in collin_data._clusters:
         cl.plot(font_size = 10)
-    point_non_colin = colin_data.convert_new_collin_data(point_col)
-        
+    point_non_colin = collin_data.convert_new_collin_data(point_col)
+#        
