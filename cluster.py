@@ -24,7 +24,7 @@ class cluster():
 
     def update_with(self, pair, force_update = False):
         """
-        Addds a new pair to the cluster. The pair must have a node in common with cluster otherwise Exception will be raised. If force_update is set to True, a pair with no common node can be forced into cluster.
+        Adds a new pair to the cluster. The pair must have a node in common with cluster otherwise Exception will be raised. If force_update is set to True, a pair with no common node can be forced into cluster.
         Parameters:
             pair : A list or tuple in the form of (node1(str),node2(str), weight(float64)).
             force_update (boolean): True or False
