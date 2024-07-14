@@ -77,7 +77,7 @@ class collinear_data():
         for cluster_ in self._clusters:
 #            print ('**',len(cluster_.nodes))
             for num_component in range(1,len(cluster_.nodes)): 
-                pc_data, expl_variance, component, pca_obj = _pca(self.collinear_df[cluster_.nodes], n=num_component)
+                pc_data, expl_variance, component, pca_obj = _pca(self.collinear_df[list(cluster_.nodes)], n=num_component)
                 if sum(expl_variance) > min_total_variance_ratio_explained:
                     break
             if verbose:
@@ -104,7 +104,7 @@ class collinear_data():
         if self.pca_obj_dict == None:
             raise Exception ("'conversion_dict' missing. Please run 'non_collinear_df' method first.")
         for cl in  self._clusters:
-            collin_data = final_result[cl.nodes]
+            collin_data = final_result[list(cl.nodes)]
             pc_data = self.pca_obj_dict[cl.name].transform(collin_data)
             final_result = self._add_pc_to_collin_df(final_result, pc_data, cl.name, cl.nodes)
         return final_result
